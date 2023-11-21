@@ -15,8 +15,9 @@ sourceSets.main {
 }
 
 dependencies {
-    // https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-api
-    testImplementation("org.junit.jupiter:junit-jupiter-api:5.10.1")
+    // https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter
+    // testImplementation("org.junit.jupiter:junit-jupiter-api:5.10.1")
+    testImplementation("org.junit.jupiter:junit-jupiter:5.10.1")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.10.1")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }

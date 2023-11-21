@@ -246,6 +246,11 @@ open class Opt<T : Any> {
         }
     }
 
+    fun <R : Any> tol(mapper: (T) -> List<R>): ListOpt<R> {
+
+        return ListOpt(mapper(value()))
+    }
+
 //    /**
 //     * A non transforming through-to-list-for-each (lxforEach). Performs side-effect
 //     * on the contents, with no modification of the contents.
@@ -287,39 +292,59 @@ open class Opt<T : Any> {
 
 fun <T : Any> T?.toOpt(): Opt<T> = Opt.of(this)
 
+fun <T : Any> T.toListOpt() = ListOpt(listOf(this))
+
 fun <T : Any> Boolean?.onTrue(conditionalMapper: Boolean.() -> T): Opt<T> =
         this.toOpt().onTrue(conditionalMapper)
 
 fun <T : Any> Boolean?.onFalse(conditionalMapper: Boolean.() -> T): Opt<T> =
         this.toOpt().onFalse(conditionalMapper)
 
-class Lopt<T : Any>(o: List<T>) : Opt<List<T>>(o) {
+class ListOpt<T : Any> {
 
-    fun forEach() {}
+    var value: List<T>? = null
 
-    fun filter() {}
+    constructor()
 
-    fun map() {}
-
-    fun flatMap() {}
-
-    fun first() {
-        val list = listOf(1, 2, 3, 4)
+    constructor(o: List<T>) {
+        value = o
     }
 
-    fun last() {}
+    fun use(o: List<T>): ListOpt<T> {
+        value = o
+        return this
+    }
 
-    fun foldLeft() {}
+    fun forEach(block: (T) -> Unit) {
+        value!!.forEach(block)
+    }
 
-    fun foldRight() {}
+    fun filter(predicate: (T) -> Boolean): ListOpt<T> = ListOpt(value!!.filter(predicate))
 
-    fun sublist() {}
+    fun <R : Any> map(mapper: (T) -> R): ListOpt<R> {
 
-    fun contains() {}
+        val mapped: List<R> = value!!.map(mapper)
 
-    fun containsAll() {}
+        return ListOpt(mapped)
+    }
 
-    override fun some(): Boolean = false
-
-    override fun none(): Boolean = false
+    fun <R : Any> flatMap(mapper: (T) -> Iterable<R>): List<R> = value!!.flatMap(mapper)
+//
+//    fun first(): Opt<T> = of(value().first())
+//
+//    fun last(): Opt<T> = of(value().last())
+//
+//    fun <R : Any> foldLeft(initial: R, operation: (R, T) -> R): Opt<R> = of(value().fold(initial, operation))
+//
+//    fun <R : Any> foldRight(initial: R, operation: (T, R) -> R): Opt<R> = of(value().foldRight(initial, operation))
+//
+//    fun sublist() {}
+//
+//    fun contains() {}
+//
+//    fun containsAll() {}
+//
+//    override fun some(): Boolean = false
+//
+//    override fun none(): Boolean = false
 }
