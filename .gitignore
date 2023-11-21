@@ -26,6 +26,8 @@ build/
 !**/test/**/build
 *.iml
 !**/testData/**/*.iml
+.idea/uiDesigner.xml
+.idea/vcs.xml
 .idea/artifacts
 .idea/remote-targets.xml
 .idea/libraries/Gradle*.xml

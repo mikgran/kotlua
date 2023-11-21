@@ -1,4 +1,3 @@
-
 plugins {
     kotlin("jvm") version ("1.9.20")
 }
@@ -18,5 +17,10 @@ sourceSets.main {
 dependencies {
     // https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter-api
     testImplementation("org.junit.jupiter:junit-jupiter-api:5.10.1")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.10.1")
+    testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 }
 
+tasks.test<Test> {
+    useJUnitPlatform()
+}
