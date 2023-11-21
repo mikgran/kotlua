@@ -760,7 +760,7 @@ class OptTest {
 //      }
 
     @Test
-    fun testOnTrue() {
+    fun testMapOnTrue() {
 
         val testVar = "test"
         val nullT: Boolean? = null
@@ -804,7 +804,7 @@ class OptTest {
     }
 
     @Test
-    fun testMapIfNot() {
+    fun testMapOnFalse() {
 
         val testVar = "test"
         val nullT: Boolean? = null

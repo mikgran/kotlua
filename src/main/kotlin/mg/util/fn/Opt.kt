@@ -4,9 +4,9 @@ import java.util.*
 import kotlin.reflect.KClass
 import kotlin.reflect.safeCast
 
-class Opt<T : Any> {
+open class Opt<T : Any> {
 
-    private var value: T? = null
+    protected var value: T? = null
 
     constructor()
 
@@ -14,8 +14,8 @@ class Opt<T : Any> {
         value = t
     }
 
-    fun some(): Boolean = value != null
-    fun none(): Boolean = value == null
+    open fun some(): Boolean = value != null
+    open fun none(): Boolean = value == null
     fun get() = value
     fun value(): T = value!!
 
@@ -49,16 +49,8 @@ class Opt<T : Any> {
         return this
     }
 
-    // supply new if some()
+    // replace with new
     fun replace(supplier: () -> T): Opt<T> = Opt(supplier())
-
-    // run chunk if some()
-    fun with(block: () -> Unit): Opt<T> {
-        if (some()) {
-            block()
-        }
-        return this
-    }
 
     // run chunk if none()
     fun none(block: () -> Unit): Opt<T> {
@@ -218,17 +210,15 @@ class Opt<T : Any> {
 //    }
 
     fun <V : Any> onTrue(conditionalMapper: (T) -> V): Opt<V> {
-        val b = value as? Boolean
         return when {
-            some() && true == b -> conditionalMapper(value!!).toOpt()
+            some() && true == (value as? Boolean) -> conditionalMapper(value!!).toOpt()
             else -> empty()
         }
     }
 
     fun <V : Any> onFalse(conditionalMapper: (T) -> V): Opt<V> {
-        val b = value as? Boolean
         return when {
-            some() && false == b -> conditionalMapper(value!!).toOpt()
+            some() && false == (value as? Boolean) -> conditionalMapper(value!!).toOpt()
             else -> empty()
         }
     }
@@ -295,8 +285,6 @@ class Opt<T : Any> {
     }
 }
 
-
-
 fun <T : Any> T?.toOpt(): Opt<T> = Opt.of(this)
 
 fun <T : Any> Boolean?.onTrue(conditionalMapper: Boolean.() -> T): Opt<T> =
@@ -304,3 +292,34 @@ fun <T : Any> Boolean?.onTrue(conditionalMapper: Boolean.() -> T): Opt<T> =
 
 fun <T : Any> Boolean?.onFalse(conditionalMapper: Boolean.() -> T): Opt<T> =
         this.toOpt().onFalse(conditionalMapper)
+
+class Lopt<T : Any>(o: List<T>) : Opt<List<T>>(o) {
+
+    fun forEach() {}
+
+    fun filter() {}
+
+    fun map() {}
+
+    fun flatMap() {}
+
+    fun first() {
+        val list = listOf(1, 2, 3, 4)
+    }
+
+    fun last() {}
+
+    fun foldLeft() {}
+
+    fun foldRight() {}
+
+    fun sublist() {}
+
+    fun contains() {}
+
+    fun containsAll() {}
+
+    override fun some(): Boolean = false
+
+    override fun none(): Boolean = false
+}
