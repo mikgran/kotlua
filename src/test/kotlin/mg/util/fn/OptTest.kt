@@ -466,7 +466,7 @@ class OptTest {
         assertDoesNotThrow {
 
             val opt = Opt.of("a")
-            val candidate = opt.getOrElseThrow { Exception() }
+            val candidate = opt.getOrThrow { Exception() }
 
             assertNotNull(candidate)
             assertEquals("a", candidate)
@@ -476,7 +476,7 @@ class OptTest {
 
             val opt = Opt.of<String>(null)
 
-            opt.getOrElseThrow { Exception() }
+            opt.getOrThrow { Exception() }
         }
     }
 
@@ -534,171 +534,6 @@ class OptTest {
         assertEquals("9", candidate2)
     }
 
-//      @Test
-//      fun test_xmap() {
-//          Opt.of(listOf(1, 2, 3, 4))
-//                  .xmap { filter { it < 3 } }
-//                  .apply {
-//                      assertNotNull(get())
-//                      assertEquals(listOf(1, 2), get())
-//                  }
-//
-//          Opt.of("someData")
-//                  .xmap { length }
-//                  .apply {
-//                      assertEquals(8, get())
-//                  }
-//      }
-
-//      @Test
-//      fun test_x() {
-//          Opt.of(listOf(1, 2, 3, 4))
-//                  .x {
-//                      val subList = filter { it < 3 }
-//                      assertNotNull(subList)
-//                      assertEquals(2, subList.size)
-//                      assertEquals(3, subList.sum())
-//                  }
-//                  .apply {
-//                      val t = get()
-//                      assertNotNull(t)
-//                      assertEquals(4, t?.size)
-//                      assertEquals(10, t?.sum())
-//                  }
-//
-//          Opt.of(mutableListOf(1, 2, 3, 4))
-//                  .x {
-//                      add(5)
-//                  }
-//                  .apply {
-//                      val list = get()
-//                      assertNotNull(list)
-//                      assertEquals(5, list?.size)
-//                      assertEquals(15, list?.sum())
-//                  }
-//      }
-//
-//      @Test
-//      fun test_c() {
-//          Opt.of(listOf(1, 2, 3, 4))
-//                  .c { list ->
-//                      val subList = list.filter { it < 3 }
-//                      assertNotNull(subList)
-//                      assertEquals(2, subList.size)
-//                      assertEquals(3, subList.sum())
-//                  }
-//                  .apply {
-//                      val t = get()
-//                      assertNotNull(t)
-//                      assertEquals(4, t?.size)
-//                      assertEquals(10, t?.sum())
-//                  }
-//
-//          Opt.of(mutableListOf(1, 2, 3, 4))
-//                  .c { list ->
-//                      list.add(5)
-//                  }
-//                  .apply {
-//                      val list = get()
-//                      assertNotNull(list)
-//                      assertEquals(5, list?.size)
-//                      assertEquals(15, list?.sum())
-//                  }
-//      }
-
-//      @Test
-//      fun test_lxmap() {
-//
-//          fun twice(list: List<Int>): List<String> = list.map { "${it * 2}" }
-//
-//          val twiceFun =
-//                  fun List<Int>.(): List<String> {
-//                      return map { "${it * 2}" }
-//                  }
-//
-//          Opt.of(listOf(1, 2, 3, 4))
-//                  .lxmap(::twice)
-//                  .apply {
-//                      assertEquals(listOf("2", "4", "6", "8"), get())
-//                  }
-//
-//          Opt.of(listOf(1, 2, 3, 4))
-//                  .lxmap<Int, String> { twice(this) }
-//                  .apply {
-//                      assertEquals(listOf("2", "4", "6", "8"), get())
-//                  }
-//
-//          Opt.of(listOf(1, 2, 3, 4))
-//                  .lxmap(twiceFun)
-//                  .apply {
-//                      assertEquals(listOf("2", "4", "6", "8"), get())
-//                  }
-//      }
-//
-//      @Test
-//      fun test_lxforEach() {
-//
-//          val mutableList = mutableListOf<Int>()
-//
-//          assertEquals(0, mutableList.sum())
-//
-//          Opt.of(listOf(1, 2, 3, 4))
-//                  .lxforEach(mutableList::add)
-//                  .apply {
-//                      val candidate: List<Int>? = get()
-//                      assertNotNull(candidate)
-//                      assertEquals(10, mutableList.sum())
-//                  }
-//      }
-//
-//      @Test
-//      fun test_lfilter() {
-//
-//          Opt.of(listOf(1, 2, 3, 4))
-//                  .lfilter { i: Int -> i % 2 == 0 }
-//                  .apply {
-//                      assertEquals("2,4", get()?.joinToString(","))
-//                  }
-//
-//          Opt.of(listOf(1, 2, 3, 4, 5, 6, 7, 8))
-//                  .lfilter<Int> { false }
-//                  .apply {
-//                      assertNotNull(get())
-//                      assertTrue(get()?.isEmpty() ?: false)
-//                  }
-//      }
-
-//      @Test
-//      fun test_l_i_map() {
-//          Opt.of(listOf(1, 2, 3, 4))
-//                  .lmap { i: Int -> "A$i" }
-//                  .apply {
-//                      assertEquals("A1,A2,A3,A4", get()?.joinToString(","))
-//                  }
-//
-//          Opt.of(listOf(1, 2, 3, 4))
-//                  .lmap(::intToAiString)
-//                  .apply {
-//                      assertEquals("A1,A2,A3,A4", get()?.joinToString(","))
-//                  }
-//
-//          Opt.of(listOf(1, 2, 3, 4, "str"))
-//                  .toList<Int>()
-//                  .apply {
-//                      assertTrue(isNotEmpty())
-//                      assertEquals(10, sum())
-//                  }
-//
-//          Opt.of(listOf(1, 2, 3, 4).iterator())
-//                  .lmap(::intToAiString)
-//                  .apply {
-//                      assertEquals("A1,A2,A3,A4", get()?.joinToString(","))
-//                  }
-//      }
-//
-//      private fun intToAiString(i: Int): String = "A$i"
-//
-
     @Test
     fun testOptOfExtension() {
 
@@ -708,20 +543,23 @@ class OptTest {
         assertEquals(someData, candidate.get())
     }
 
-//      @Test
-//      fun testToList() {
-//
-//          val str = "A"
-//          val list = listOf(1, 2, 3, 4)
-//          val list2: List<Any> = listOf(1, 2, 3, str, 4)
-//          val strNull: String? = null
-//
-//          str.toOpt()
-//                  .toList<String>()
-//                  .apply {
-//                      assertTrue(isNotEmpty())
-//                      assertTrue(contains(str))
-//                  }
+    @Test
+    fun testToList() {
+
+        val str = "A"
+        val list = listOf(1, 2, 3, 4)
+        val list2: List<Any> = listOf(1, 2, 3, str, 4)
+        val strNull: String? = null
+
+        str.toOpt()
+                .toListOpt {
+                    listOf(it)
+                }
+                .apply {
+                    assertTrue(some())
+                    assertTrue(contains(str))
+                }
+    }
 //
 //          strNull.toOpt()
 //                  .toList<Any>()

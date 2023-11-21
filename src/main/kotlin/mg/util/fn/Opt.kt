@@ -4,9 +4,9 @@ import java.util.*
 import kotlin.reflect.KClass
 import kotlin.reflect.safeCast
 
-open class Opt<T : Any> {
+class Opt<T : Any> {
 
-    protected var value: T? = null
+    private var value: T? = null
 
     constructor()
 
@@ -14,8 +14,8 @@ open class Opt<T : Any> {
         value = t
     }
 
-    open fun some(): Boolean = value != null
-    open fun none(): Boolean = value == null
+    fun some(): Boolean = value != null
+    fun none(): Boolean = value == null
     fun get() = value
     fun value(): T = value!!
 
@@ -84,48 +84,6 @@ open class Opt<T : Any> {
         else -> empty()
     }
 
-//    fun <V : Any> match(predicate: Boolean, mapper: (T) -> V): BiOpt<T, V> =
-//            this.match({ predicate }, mapper)
-
-//    fun <V : Any> match(predicate: (T) -> Boolean, mapper: (T) -> V): BiOpt<T, V> {
-//        return this.filter { isPresent() && predicate(value!!) }
-//                .map(mapper)
-//                .map { v -> BiOpt.of(value!!, v) }
-//                .getOrElse(getBiOptOfValueAndEmpty())
-//    }
-
-//    @Suppress("UNCHECKED_CAST")
-//    fun <R : Any, V : Any> match(
-//            ref: R,
-//            predicate: (R) -> Boolean,
-//            mapper: (R) -> V,
-//    ): BiOpt<T, V> {
-//
-//        // maps and filters only non null values of the same class.
-//        // returns BiOpt.of(oldValue, newValue/null)
-//        return this.filter { isPresent() && isValueClassSameAsRefClass(ref) }
-//                .map { it as R }
-//                .filter(predicate)
-//                .map(mapper)
-//                .map { v -> BiOpt.of(value!!, v) }
-//                .getOrElse(getBiOptOfValueAndEmpty())
-//    }
-
-//    private fun <V : Any> getBiOptOfValueAndEmpty(): BiOpt<T, V> = BiOpt.of(of(value), empty())
-//
-//    fun <V : Any> case(
-//            predicate: (T) -> Boolean,
-//            mapper: (T) -> V,
-//    ): BiOpt<T, V> {
-//
-//        return this.filter { isPresent() && predicate(value!!) }
-//                .map(mapper)
-//                .map { newRight -> BiOpt.of(value!!, newRight) }
-//                .getOrElse(getBiOptOfValueAndEmpty())
-//    }
-
-//    private fun <R : Any> isValueClassSameAsRefClass(ref: R): Boolean =
-//            value?.let { it::class == ref::class } ?: false
 
     fun getOrElse(default: T): T = when {
         some() -> value!!
@@ -142,7 +100,7 @@ open class Opt<T : Any> {
         else -> null
     }
 
-    fun getOrElseThrow(exceptionProducer: () -> Throwable): T? = when {
+    fun getOrThrow(exceptionProducer: () -> Throwable): T? = when {
         some() -> value
         else -> throw exceptionProducer()
     }
@@ -194,21 +152,6 @@ open class Opt<T : Any> {
         else -> empty()
     }
 
-
-//    inline fun <reified V : Any, R : Any> map(type: Iterator<*>, mapper: (V) -> R): Opt<List<R>> {
-//        val list = mutableListOf<R>()
-//        for (element in type) if (element is V) list += mapper(element)
-//        return of(list)
-//    }
-
-//    inline fun <reified V : Any, R : Any> lmap(mapper: (V) -> R): Opt<List<R>> {
-//        return when (val type = get()) {
-//            is List<*> -> map(type.iterator(), mapper)
-//            is Iterator<*> -> map(type, mapper)
-//            else -> empty()
-//        }
-//    }
-
     fun <V : Any> onTrue(conditionalMapper: (T) -> V): Opt<V> {
         return when {
             some() && true == (value as? Boolean) -> conditionalMapper(value!!).toOpt()
@@ -246,30 +189,7 @@ open class Opt<T : Any> {
         }
     }
 
-    fun <R : Any> tol(mapper: (T) -> List<R>): ListOpt<R> {
-
-        return ListOpt(mapper(value()))
-    }
-
-//    /**
-//     * A non transforming through-to-list-for-each (lxforEach). Performs side-effect
-//     * on the contents, with no modification of the contents.
-//     */
-//    inline fun <reified V : Any> lxforEach(consumer: (V) -> Unit): Opt<List<V>> {
-//        val list = toList<V>()
-//        list.forEach(consumer)
-//        return list.toOpt()
-//    }
-
-//    inline fun <reified V : Any, R : Any> lxmap(mapper: List<V>.() -> List<R>): Opt<List<R>> = of(toList<V>().mapper())
-//    inline fun <reified V : Any> lfilter(predicate: (V) -> Boolean): Opt<List<V>> = of(toList<V>().filter(predicate))
-//    inline fun <reified V : Any> toList(): List<V> {
-//        return when (val value = get()) {
-//            is List<*> -> value.filterIsInstance<V>()
-//            is V -> listOf(value)
-//            else -> emptyList()
-//        }
-//    }
+    fun <R : Any> toListOpt(mapper: (T) -> List<R>): ListOpt<R> = ListOpt(mapper(value()))
 
     companion object Factory {
 
@@ -291,8 +211,6 @@ open class Opt<T : Any> {
 }
 
 fun <T : Any> T?.toOpt(): Opt<T> = Opt.of(this)
-
-fun <T : Any> T.toListOpt() = ListOpt(listOf(this))
 
 fun <T : Any> Boolean?.onTrue(conditionalMapper: Boolean.() -> T): Opt<T> =
         this.toOpt().onTrue(conditionalMapper)

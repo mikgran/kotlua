@@ -3,7 +3,6 @@ package mg.util.fn
 import org.junit.jupiter.api.Test
 
 import org.junit.jupiter.api.Assertions.*
-import kotlin.streams.toList
 
 class LoptTest {
 
@@ -24,7 +23,7 @@ class LoptTest {
     @Test
     fun map() {
         val apply = Opt.of("1,2,3,4,5")
-                .tol { listOf(it) }
+                .toListOpt { listOf(it) }
                 .flatMap { it.split(",") }
                 .onEach { println("value: $it") }
 
