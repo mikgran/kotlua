@@ -133,7 +133,7 @@ class LoptTest {
     }
 
     @Test
-    fun filter() {
+    fun testFilter() {
         val a = listOf(1, 2, 3, 4, 5)
         val expected = listOf(2, 4)
 
@@ -145,7 +145,7 @@ class LoptTest {
     }
 
     @Test
-    fun map() {
+    fun testMap() {
         val expected = listOf(2, 4, 6, 8, 10)
         (1..5).toList()
                 .toListOpt()
@@ -156,7 +156,7 @@ class LoptTest {
     }
 
     @Test
-    fun flatMap() {
+    fun testFlatMap() {
         val str = "1,2,3,4,5"
         val expected = listOf("1", "2", "3", "4", "5")
         Opt.of(str)
@@ -171,41 +171,5 @@ class LoptTest {
                 .apply {
                     assertEquals(expected, value())
                 }
-    }
-
-    @Test
-    fun first() {
-    }
-
-    @Test
-    fun last() {
-    }
-
-    @Test
-    fun foldLeft() {
-    }
-
-    @Test
-    fun foldRight() {
-    }
-
-    @Test
-    fun sublist() {
-    }
-
-    @Test
-    fun contains() {
-    }
-
-    @Test
-    fun containsAll() {
-    }
-
-    @Test
-    fun some() {
-    }
-
-    @Test
-    fun none() {
     }
 }

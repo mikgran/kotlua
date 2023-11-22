@@ -73,47 +73,27 @@ class ListOpt<T : Any> {
     }
 
     fun <R : Any> flatMap(mapper: (T) -> Iterable<R>): ListOpt<R> = ListOpt(value?.flatMap(mapper) ?: emptyList())
+
+    fun <V : Any> match(predicate: (T) -> Boolean, mapper: (T) -> V): ListOpt<V> {
+        return when {
+            some() -> value
+                    ?.filter { predicate(it) }
+                    ?.map(mapper)
+                    ?.toListOpt() ?: ListOpt()
+
+            else -> ListOpt()
+        }
+    }
+
+    inline fun <reified V : Any, R : Any> map(type: Iterator<*>, mapper: (V) -> R): ListOpt<R> {
+        val list = mutableListOf<R>()
+        for (element in type) if (element is V) list += mapper(element)
+        return ListOpt(list)
+    }
 }
 
-inline fun <reified T : Any> List<T>.toListOpt(): ListOpt<T> = ListOpt(this)
+fun <T : Any> List<T>.toListOpt(): ListOpt<T> = ListOpt(this)
 fun <T : Any> T.toListOpt(): ListOpt<T> = ListOpt(listOf(this))
-
-
-//    fun <V : Any> match(predicate: Boolean, mapper: (T) -> V): BiOpt<T, V> =
-//            this.match({ predicate }, mapper)
-
-//    fun <V : Any> match(predicate: (T) -> Boolean, mapper: (T) -> V): BiOpt<T, V> {
-//        return this.filter { isPresent() && predicate(value!!) }
-//                .map(mapper)
-//                .map { v -> BiOpt.of(value!!, v) }
-//                .getOrElse(getBiOptOfValueAndEmpty())
-//    }
-
-//    @Suppress("UNCHECKED_CAST")
-//    fun <R : Any, V : Any> match(
-//            ref: R,
-//            predicate: (R) -> Boolean,
-//            mapper: (R) -> V,
-//    ): BiOpt<T, V> {
-//
-//        // maps and filters only non null values of the same class.
-//        // returns BiOpt.of(oldValue, newValue/null)
-//        return this.filter { isPresent() && isValueClassSameAsRefClass(ref) }
-//                .map { it as R }
-//                .filter(predicate)
-//                .map(mapper)
-//                .map { v -> BiOpt.of(value!!, v) }
-//                .getOrElse(getBiOptOfValueAndEmpty())
-//    }
-
-//    private fun <R : Any> isValueClassSameAsRefClass(ref: R): Boolean =
-//            value?.let { it::class == ref::class } ?: false
-
-//    inline fun <reified V : Any, R : Any> map(type: Iterator<*>, mapper: (V) -> R): Opt<List<R>> {
-//        val list = mutableListOf<R>()
-//        for (element in type) if (element is V) list += mapper(element)
-//        return of(list)
-//    }
 
 
 
