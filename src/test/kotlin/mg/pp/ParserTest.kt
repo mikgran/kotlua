@@ -1,17 +1,21 @@
 package mg.pp
 
-import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 
-class ParserTest {
+class SequenceTest {
 
-    val str = "() -> {}"
+    val str = "{ -> }"
 
     @Test
     fun testStructure1() {
 
+        val sequence = Sequence()
 
+        sequence + "{" + "->" + "}"
 
+//        for (s in parser) {
+//            print(" $s ")
+//        }
     }
 
 }
