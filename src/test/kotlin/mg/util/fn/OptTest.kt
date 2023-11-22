@@ -559,43 +559,50 @@ class OptTest {
                     assertTrue(some())
                     assertTrue(contains(str))
                 }
+
+        str.toOpt()
+                .toListOpt<String>()
+                .apply {
+                    assertTrue(some())
+                    assertTrue(contains(str))
+                }
+
+        strNull.toOpt()
+                .toListOpt<Any>()
+                .apply {
+                    assertTrue(none())
+                }
+
+        list.toOpt()
+                .toListOpt<Int>()
+                .apply {
+                    assertTrue(some())
+                    assertTrue(containsAll(list))
+                }
+
+        list2.toOpt()
+                .toListOpt<Int>()
+                .apply {
+                    assertTrue(some())
+                    assertTrue(containsAll(list))
+                }
+
+        list2.toOpt()
+                .toListOpt<String>()
+                .apply {
+                    assertTrue(some())
+                    assertTrue(contains(str))
+                    assertEquals(1, size())
+                }
+
+        list2.toOpt()
+                .toListOpt<Any>()
+                .apply {
+                    assertTrue(some())
+                    assertTrue(containsAll(list2))
+                }
     }
-//
-//          strNull.toOpt()
-//                  .toList<Any>()
-//                  .apply {
-//                      assertTrue(isEmpty())
-//                  }
-//
-//          list.toOpt()
-//                  .toList<Int>()
-//                  .apply {
-//                      assertTrue(isNotEmpty())
-//                      assertTrue(containsAll(list))
-//                  }
-//
-//          list2.toOpt()
-//                  .toList<Int>()
-//                  .apply {
-//                      assertTrue(isNotEmpty())
-//                      assertTrue(containsAll(list))
-//                  }
-//
-//          list2.toOpt()
-//                  .toList<String>()
-//                  .apply {
-//                      assertTrue(isNotEmpty())
-//                      assertTrue(contains(str))
-//                      assertEquals(1, size)
-//                  }
-//
-//          list2.toOpt()
-//                  .toList<Any>()
-//                  .apply {
-//                      assertTrue(isNotEmpty())
-//                      assertTrue(containsAll(list2))
-//                  }
-//      }
+
 
     @Test
     fun testMapOnTrue() {
@@ -640,6 +647,7 @@ class OptTest {
                     assertFalse(some())
                 }
     }
+
 
     @Test
     fun testMapOnFalse() {
@@ -783,6 +791,7 @@ class OptTest {
         const val VALUE3 = "value2"
     }
 }
+
 
 class TempValue(var a: String?) {
     fun set(s: String) {

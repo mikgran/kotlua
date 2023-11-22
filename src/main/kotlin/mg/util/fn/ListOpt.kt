@@ -4,18 +4,29 @@ class ListOpt<T : Any> {
 
     private var value: List<T>? = null
 
-    constructor()
+    constructor() {
+        value = emptyList()
+    }
 
     constructor(o: List<T>) {
         value = o
     }
 
-    fun first(): Opt<T> = Opt.of(value?.first())
-    fun last(): Opt<T> = Opt.of(value?.last())
+    fun first(): Opt<T> = when {
+        some() -> Opt.of(value?.first())
+        else -> Opt.empty()
+    }
+
+    fun last(): Opt<T> = when {
+        some() -> Opt.of(value?.last())
+        else -> Opt.empty()
+    }
+
     fun size() = value?.size ?: 0
     fun some(): Boolean = value?.isNotEmpty() ?: false
     fun none(): Boolean = value?.isEmpty() ?: true
-    fun get(): List<T>? = value
+    fun toList(): List<T>? = value
+    fun get(index: Int): T? = value?.get(index)
     fun value(): List<T> = value!!
 
     fun contains(element: T): Boolean {
@@ -42,38 +53,30 @@ class ListOpt<T : Any> {
     fun <R : Any> foldLeft(initial: R, operation: (R, T) -> R): Opt<R> = Opt.of(value?.fold(initial, operation))
     fun <R : Any> foldRight(initial: R, operation: (T, R) -> R): Opt<R> = Opt.of(value?.foldRight(initial, operation))
 
-    fun sublist() {}
+    fun subList(fromIndex: Int, toIndex: Int): ListOpt<T> = ListOpt(value().subList(fromIndex, toIndex))
 
     fun use(o: List<T>): ListOpt<T> {
         value = o
         return this
     }
 
-    fun forEach(block: (T) -> Unit) = value().forEach(block)
+    fun forEach(block: (T) -> Unit): ListOpt<T> {
+        value().forEach(block)
+        return this
+    }
 
-    fun filter(predicate: (T) -> Boolean): ListOpt<T> = ListOpt(value().filter(predicate))
+    fun filter(predicate: (T) -> Boolean): ListOpt<T> = ListOpt(value?.filter(predicate) ?: emptyList())
 
     fun <R : Any> map(mapper: (T) -> R): ListOpt<R> {
         val mapped: List<R> = value().map(mapper)
         return ListOpt(mapped)
     }
 
-    fun <R : Any> flatMap(mapper: (T) -> Iterable<R>): List<R> = value!!.flatMap(mapper)
+    fun <R : Any> flatMap(mapper: (T) -> Iterable<R>): ListOpt<R> = ListOpt(value?.flatMap(mapper) ?: emptyList())
 }
 
-@Suppress("UNCHECKED_CAST")
-fun <T : Any> T.toListOpt(): ListOpt<T> {
-    return when (this) {
-        is Opt<*> -> {
-            when (val o = this.get()) {
-                null -> ListOpt()
-                else -> ListOpt(listOf(o as T))
-            }
-        }
-
-        else -> ListOpt(listOf(this))
-    }
-}
+inline fun <reified T : Any> List<T>.toListOpt(): ListOpt<T> = ListOpt(this)
+fun <T : Any> T.toListOpt(): ListOpt<T> = ListOpt(listOf(this))
 
 
 //    fun <V : Any> match(predicate: Boolean, mapper: (T) -> V): BiOpt<T, V> =
@@ -103,19 +106,6 @@ fun <T : Any> T.toListOpt(): ListOpt<T> {
 //                .getOrElse(getBiOptOfValueAndEmpty())
 //    }
 
-//    private fun <V : Any> getBiOptOfValueAndEmpty(): BiOpt<T, V> = BiOpt.of(of(value), empty())
-//
-//    fun <V : Any> case(
-//            predicate: (T) -> Boolean,
-//            mapper: (T) -> V,
-//    ): BiOpt<T, V> {
-//
-//        return this.filter { isPresent() && predicate(value!!) }
-//                .map(mapper)
-//                .map { newRight -> BiOpt.of(value!!, newRight) }
-//                .getOrElse(getBiOptOfValueAndEmpty())
-//    }
-
 //    private fun <R : Any> isValueClassSameAsRefClass(ref: R): Boolean =
 //            value?.let { it::class == ref::class } ?: false
 
@@ -125,31 +115,5 @@ fun <T : Any> T.toListOpt(): ListOpt<T> {
 //        return of(list)
 //    }
 
-//    inline fun <reified V : Any, R : Any> lmap(mapper: (V) -> R): Opt<List<R>> {
-//        return when (val type = get()) {
-//            is List<*> -> map(type.iterator(), mapper)
-//            is Iterator<*> -> map(type, mapper)
-//            else -> empty()
-//        }
-//    }
 
 
-//    /**
-//     * A non transforming through-to-list-for-each (lxforEach). Performs side-effect
-//     * on the contents, with no modification of the contents.
-//     */
-//    inline fun <reified V : Any> lxforEach(consumer: (V) -> Unit): Opt<List<V>> {
-//        val list = toList<V>()
-//        list.forEach(consumer)
-//        return list.toOpt()
-//    }
-
-//    inline fun <reified V : Any, R : Any> lxmap(mapper: List<V>.() -> List<R>): Opt<List<R>> = of(toList<V>().mapper())
-//    inline fun <reified V : Any> lfilter(predicate: (V) -> Boolean): Opt<List<V>> = of(toList<V>().filter(predicate))
-//    inline fun <reified V : Any> toList(): List<V> {
-//        return when (val value = get()) {
-//            is List<*> -> value.filterIsInstance<V>()
-//            is V -> listOf(value)
-//            else -> emptyList()
-//        }
-//    }

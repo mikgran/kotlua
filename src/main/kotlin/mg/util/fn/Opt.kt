@@ -189,7 +189,17 @@ class Opt<T : Any> {
         }
     }
 
-    fun <R : Any> toListOpt(mapper: (T) -> List<R>): ListOpt<R> = ListOpt(mapper(value()))
+    fun <R : Any> toListOpt(listMaker: (T) -> List<R>): ListOpt<R> = ListOpt(listMaker(value()))
+
+    inline fun <reified V : Any> toListOpt(): ListOpt<V> {
+        when (val value = get()) {
+            is List<*> -> value.filterIsInstance<V>()
+            is V -> listOf(value)
+            else -> emptyList()
+        }.apply {
+            return ListOpt(this)
+        }
+    }
 
     companion object Factory {
 
