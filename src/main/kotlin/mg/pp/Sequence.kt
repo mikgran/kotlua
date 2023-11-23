@@ -9,10 +9,12 @@ class Sequence {
     fun get(index: Int) = elements[index]
 
     operator fun iterator() = elements.iterator()
+
+    fun toList(): List<String> = elements
 }
 
 operator fun Sequence.plus(element: String): Sequence {
-    this.add(element)
+    add(element)
     return this
 }
 
