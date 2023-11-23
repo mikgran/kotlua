@@ -23,11 +23,11 @@ class Parser {
 
 
     private fun parse(string: String): List<String> {
-        val sequence = listOf<String>()
+        val sequence = mutableListOf<String>()
         string.toListOpt()
                 .map { it.replace(",", "") }
                 .flatMap { it.split(delimeter) }
-                .forEach { sequence + it }
+                .forEach { sequence += it }
         return sequence
     }
 
