@@ -3,7 +3,7 @@ package mg.util.fn
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
 
-class LoptTest {
+class ListOptTest {
 
     @Test
     fun testUseList() {
