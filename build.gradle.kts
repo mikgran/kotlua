@@ -25,3 +25,10 @@ dependencies {
 tasks.test<Test> {
     useJUnitPlatform()
 }
+
+task<Exec>("report") {
+    exec {
+        workingDir("./build/reports/tests/test")
+        commandLine("cmd", "/c", "start index.html")
+    }
+}
