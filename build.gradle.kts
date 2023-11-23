@@ -26,9 +26,8 @@ tasks.test<Test> {
     useJUnitPlatform()
 }
 
-task<Exec>("report") {
-    exec {
-        workingDir("./build/reports/tests/test")
-        commandLine("cmd", "/c", "start index.html")
-    }
+task("report", Exec::class) {
+    workingDir("./build/reports/tests/test")
+    commandLine("cmd", "/c", "start index.html")
 }
+

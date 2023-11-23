@@ -20,8 +20,6 @@ class Parser {
                 }
     }
 
-
-
     private fun parse(string: String): List<String> {
         val sequence = mutableListOf<String>()
         string.toListOpt()
