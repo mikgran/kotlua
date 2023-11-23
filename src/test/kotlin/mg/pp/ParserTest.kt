@@ -13,7 +13,7 @@ class ParserTest {
         val parser = Parser()
         parser["fun"] = capture
 
-        assertEquals(expected, parser["fun"]?.toList())
+        assertEquals(expected, parser["fun"])
     }
 
     @Test
@@ -24,6 +24,6 @@ class ParserTest {
         val parser = Parser()
         parser["fun"] = capture
 
-        assertEquals(expected, parser["fun"]?.toList())
+        assertEquals(expected, parser["fun"])
     }
 }

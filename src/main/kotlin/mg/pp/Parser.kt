@@ -4,6 +4,7 @@ import mg.util.fn.toListOpt
 
 class Parser {
 
+    private var dictionary = mutableMapOf<String, List<String>>()
     private var delimeter: String
 
     constructor() {
@@ -19,10 +20,10 @@ class Parser {
                 }
     }
 
-    private var dictionary = mutableMapOf<String, Sequence>()
 
-    private fun parse(string: String): Sequence {
-        val sequence = Sequence()
+
+    private fun parse(string: String): List<String> {
+        val sequence = listOf<String>()
         string.toListOpt()
                 .map { it.replace(",", "") }
                 .flatMap { it.split(delimeter) }
@@ -34,11 +35,11 @@ class Parser {
         dictionary[key] = parse(capture)
     }
 
-    fun get(key: String): Sequence? {
+    fun get(key: String): List<String>? {
         return dictionary[key]
     }
 }
 
 operator fun Parser.set(key: String, capture: String) = put(key, capture)
-operator fun Parser.get(key: String): Sequence? = get(key)
+operator fun Parser.get(key: String): List<String> = get(key) ?: emptyList()
 
