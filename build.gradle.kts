@@ -15,6 +15,8 @@ sourceSets.main {
 }
 
 dependencies {
+    implementation("com.github.cretz.kastree:kastree-ast-jvm:0.4.0")
+    implementation("com.github.cretz.kastree:kastree-ast-psi:0.4.0")
     // testImplementation("org.junit.jupiter:junit-jupiter-api:5.10.1")
     // https://mvnrepository.com/artifact/org.junit.jupiter/junit-jupiter
     testImplementation("org.junit.jupiter:junit-jupiter:5.10.1")

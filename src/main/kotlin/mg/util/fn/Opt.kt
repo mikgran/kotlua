@@ -166,13 +166,6 @@ class Opt<T : Any> {
         }
     }
 
-    fun <V : Any> some(predicate: Boolean, conditionalMapper: (T) -> V): Opt<V> {
-        return when {
-            some() && predicate -> conditionalMapper(value!!).toOpt()
-            else -> empty()
-        }
-    }
-
     inline fun <reified V : Any> mapWhen(predicate: Boolean, conditionalMapper: (T) -> V): Opt<V> {
         return when {
             some() && predicate -> conditionalMapper(value()).toOpt()
