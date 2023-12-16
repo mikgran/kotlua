@@ -20,15 +20,18 @@ class Syn {
 
             val compilerConfiguration = CompilerConfiguration()
             compilerConfiguration.put(CLIConfigurationKeys.MESSAGE_COLLECTOR_KEY, PrintingMessageCollector(System.err, MessageRenderer.PLAIN_FULL_PATHS, false))
-            val project = KotlinCoreEnvironment.createForProduction(
-                    Disposer.newDisposable(),
-                    compilerConfiguration,
-                    EnvironmentConfigFiles.JVM_CONFIG_FILES
-            ).project
+
+            val productionProject by lazy {
+                KotlinCoreEnvironment.createForProduction(
+                        Disposer.newDisposable(),
+                        compilerConfiguration,
+                        EnvironmentConfigFiles.JVM_CONFIG_FILES
+                ).project
+            }
 
             val field = parser::class.java.getDeclaredField("proj\$delegate")
             field.isAccessible = true
-            field.set(parser, lazyOf(project))
+            field.set(parser, lazyOf(productionProject))
 
             return parser.parseFile(codeString)
         }

@@ -12,6 +12,7 @@ class SynTest {
         val file: Node.File = Syn.parse()
 
         file.decls.forEach {
+            println("")
             println(it)
         }
 
