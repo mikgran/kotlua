@@ -14,7 +14,7 @@ class Syn {
 
     companion object {
 
-        fun parse(): Node.File {
+        fun parse(codeString: String): Node.File {
 
             val parser = Parser()
 
@@ -35,18 +35,6 @@ class Syn {
 
             return parser.parseFile(codeString)
         }
-
-        val codeString =
-"""
-    package foo
-
-    fun bar() {
-        // Print hello
-        println("Hello, World!")
     }
-    fun baz() = println("Hello, again!")
-""".trimIndent()
-    }
-
 }
 

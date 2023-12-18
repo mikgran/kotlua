@@ -60,6 +60,14 @@ class Opt<T : Any> {
         return this
     }
 
+    // use T if none()
+    fun noneAndSupply(supplier: () -> T): Opt<T> {
+        if (none()) {
+            use(supplier)
+        }
+        return this
+    }
+
     fun someThrow(exceptionSupplier: () -> Throwable): Opt<T> {
         if (some()) {
             throw exceptionSupplier()

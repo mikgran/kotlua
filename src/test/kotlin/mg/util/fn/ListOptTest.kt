@@ -2,6 +2,7 @@ package mg.util.fn
 
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.fail
 
 class ListOptTest {
 
@@ -170,6 +171,23 @@ class ListOptTest {
                 .flatMap { it.split(",") }
                 .apply {
                     assertEquals(expected, value())
+                }
+    }
+
+    @Test
+    fun testTakeWith2() {
+        val strings = listOf("1", "2", "3", "4", "5")
+        val expected = listOf("1", "2")
+
+        var i = 0
+        strings.toListOpt()
+                .take(2)
+                .forEach {
+                    if (i == 2) {
+                        fail("expected two elements, got more.")
+                    }
+                    assertEquals(expected[i], it)
+                    i++
                 }
     }
 }

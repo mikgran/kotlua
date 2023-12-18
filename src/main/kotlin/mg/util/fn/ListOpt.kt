@@ -29,18 +29,19 @@ class ListOpt<T : Any> {
     fun get(index: Int): T? = value?.get(index)
     fun value(): List<T> = value!!
 
-    fun contains(element: T): Boolean {
-        if (some()) {
-            return value().contains(element)
-        }
-        return false
+    fun take(numberOfElements: Int): ListOpt<T> = when {
+        some() -> value().take(numberOfElements).toListOpt()
+        else -> ListOpt()
     }
 
-    fun containsAll(elements: List<T>): Boolean {
-        if (some()) {
-            return value().containsAll(elements)
-        }
-        return false
+    fun contains(element: T): Boolean = when {
+        some() -> value().contains(element)
+        else -> false
+    }
+
+    fun containsAll(elements: List<T>): Boolean = when {
+        some() -> value().containsAll(elements)
+        else -> false
     }
 
     fun some(consumer: (List<T>) -> Unit): ListOpt<T> {
@@ -61,7 +62,9 @@ class ListOpt<T : Any> {
     }
 
     fun forEach(block: (T) -> Unit): ListOpt<T> {
-        value().forEach(block)
+        if (some()) {
+            value().forEach(block)
+        }
         return this
     }
 
